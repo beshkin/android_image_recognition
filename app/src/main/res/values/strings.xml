@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Image Capture test</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="camFind">CamFind Api</string>
+    <string name="clouldVision">Cloud Vision API</string>
+    <string name="LookingForNameOfProduct">Looking for a text</string>
+    <string name="PhotoRecognition">Photo Recognition</string>
+    <string name="PhotoRecognitionText">Cannot recognize the image</string>
+    <string name="image_picker_error">cannot pick image</string>
+    <string name="ContactingServers">Contacting Servers</string>
+    <string name="image_picker_task">picking image</string>
+    <string name="clarifai">Clarifai</string>
+</resources>

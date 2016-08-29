@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cloud_vision_api_key"></string>
+    <string name="clarifai_api_client_id"></string>
+    <string name="clarifai_api_client_secret"></string>
+    <string name="cloundsight_api_key"></string>
+</resources>

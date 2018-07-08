@@ -18,8 +18,8 @@ import java.io.IOException;
 public class CamFindTask extends AsyncTask<String, Void, String> {
     private ProgressDialog dialog;
     private MainActivity mainActivity;
-    public CamFindTask(MainActivity myActivity)
-    {
+
+    public CamFindTask(MainActivity myActivity) {
         this.mainActivity = myActivity;
         this.dialog = new ProgressDialog(myActivity);
     }
@@ -30,7 +30,7 @@ public class CamFindTask extends AsyncTask<String, Void, String> {
         dialog.setMessage(mainActivity.getResources().getString(R.string.image_picker_task));
         dialog.setIndeterminate(false);
         dialog.setCancelable(true);
-        if (mainActivity!=null)
+        if (mainActivity != null)
             dialog.show();
     }
 
@@ -39,7 +39,7 @@ public class CamFindTask extends AsyncTask<String, Void, String> {
         String response = "";
         GetCamFind getCamFind = new GetCamFind(mainActivity);
         try {
-            File file = mainActivity.getCameraFile();
+            File file = mainActivity.getFile();
             Bitmap bitmap = Helpers.decodeFile(file);
             FileOutputStream out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -48,8 +48,7 @@ public class CamFindTask extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
 
-        for (int i=0; i < 20; i++)
-        {
+        for (int i = 0; i < 20; i++) {
             String result = getCamFind.sendCamResult();
             Log.d("status", i + " " + result);
             if (!result.equals("")) {
@@ -57,7 +56,7 @@ public class CamFindTask extends AsyncTask<String, Void, String> {
 
                 String status = obj.get("status").toString();
 
-                if (status.replace("\"","").equals("completed")) {
+                if (status.replace("\"", "").equals("completed")) {
                     response = obj.get("name").toString();
                     break;
                 }
@@ -78,8 +77,7 @@ public class CamFindTask extends AsyncTask<String, Void, String> {
             dialog.dismiss();
         }
         result = result.replace("\"", "").trim();
-        if (result.matches(".*(logo|label)$"))
-        {
+        if (result.matches(".*(logo|label)$")) {
             result = result.replaceAll("(.*)(logo|label)$", "$1").trim();
         }
 

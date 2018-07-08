@@ -3,14 +3,18 @@ package com.kosherdev.imagecapturetest.tasks;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-import com.clarifai.api.ClarifaiClient;
-import com.clarifai.api.RecognitionRequest;
-import com.clarifai.api.RecognitionResult;
-import com.clarifai.api.Tag;
 import com.kosherdev.imagecapturetest.MainActivity;
 import com.kosherdev.imagecapturetest.R;
 
 import java.util.List;
+
+import clarifai2.api.ClarifaiBuilder;
+import clarifai2.api.ClarifaiClient;
+import clarifai2.api.request.model.PredictRequest;
+import clarifai2.dto.input.ClarifaiInput;
+import clarifai2.dto.model.Model;
+import clarifai2.dto.model.output.ClarifaiOutput;
+import clarifai2.dto.prediction.Concept;
 
 public class ClarifaiTask extends AsyncTask<String, Void, String> {
     private MainActivity mainActivity;
@@ -23,18 +27,24 @@ public class ClarifaiTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        ClarifaiClient clarifai = new ClarifaiClient(
-                mainActivity.getResources().getString(R.string.clarifai_api_client_id),
-                mainActivity.getResources().getString(R.string.clarifai_api_client_secret)
-        );
-        List<RecognitionResult> results =
-                clarifai.recognize(new RecognitionRequest(mainActivity.getCameraFile()));
+        ClarifaiClient clarifai = new ClarifaiBuilder(
+                mainActivity.getResources().getString(R.string.clarifai_api_client_id)
+        ).buildSync();
 
-        String result = "";
-        for (Tag tag : results.get(0).getTags()) {
-            result += tag.getName() + " ";
+        Model<Concept> generalModel = clarifai.getDefaultModels().generalModel();
+
+        PredictRequest<Concept> request = generalModel.predict().withInputs(
+                ClarifaiInput.forImage(mainActivity.getFile())
+        );
+        List<ClarifaiOutput<Concept>> results = request.executeSync().get();
+
+        StringBuilder result = new StringBuilder();
+        for (ClarifaiOutput<Concept> clarifaiOutput : results) {
+            for (Concept concept : clarifaiOutput.data()) {
+                result.append(concept.name()).append(" ");
+            }
         }
-        return result;
+        return result.toString();
     }
 
     @Override
@@ -45,8 +55,8 @@ public class ClarifaiTask extends AsyncTask<String, Void, String> {
         dialog.setMessage(mainActivity.getResources().getString(R.string.image_picker_task));
         dialog.setIndeterminate(false);
         dialog.setCancelable(true);
-        if (mainActivity != null)
-            dialog.show();
+//        if (mainActivity != null)
+//            dialog.show();
     }
 
     protected void onPostExecute(String result) {

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kosherdev.imagecapturetest.helpers.Helpers;
 import com.kosherdev.imagecapturetest.tasks.CamFindTask;
@@ -26,11 +27,7 @@ import com.kosherdev.imagecapturetest.utils.PermissionUtils;
 import java.io.File;
 
 public class MainActivity extends Activity {
-    Button cloudVisionButton = null;
-    Button camFindButton = null;
-    Button clarifaiButton = null;
     TextView textView = null;
-    private String text;
     private Context context;
 
     @Override
@@ -38,56 +35,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-        cloudVisionButton = (Button) findViewById(R.id.cloudVisionButton);
-        camFindButton = (Button) findViewById(R.id.camFindButton);
-        clarifaiButton = (Button) findViewById(R.id.clarifaiButton);
-        textView = (TextView) findViewById(R.id.textView);
-
-        cloudVisionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText("");
-                startCamera(Helpers.CLOUD_VISION_REQUEST);
-            }
-        });
-
-        camFindButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText("");
-                startCamera(Helpers.CAMFIND_REQUEST);
-            }
-        });
-
-        clarifaiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText("");
-                startCamera(Helpers.CLARIFAI_REQUEST);
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        textView = findViewById(R.id.textView);
     }
 
     @Override
@@ -104,16 +52,15 @@ public class MainActivity extends Activity {
                 new CamFindTask(this).execute();
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
-
+                Toast.makeText(this, R.string.SomethingWrong, Toast.LENGTH_SHORT).show();
             }
         }
 
         if (requestCode == Helpers.CLARIFAI_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 new ClarifaiTask(this).execute();
-
             } else if (resultCode == Activity.RESULT_CANCELED) {
-
+                Toast.makeText(this, R.string.SomethingWrong, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -147,11 +94,25 @@ public class MainActivity extends Activity {
     }
 
     public void setText(String text) {
-        this.text = text;
         textView.setText(text);
     }
 
     public void uploadImage(Uri uri) {
         new CloudVisionTask(this, uri).execute();
+    }
+
+    public void OnButtonClick(View view) {
+        textView.setText("");
+        switch (view.getId()) {
+            case R.id.cloudVisionButton:
+                startCamera(Helpers.CLOUD_VISION_REQUEST);
+                break;
+            case R.id.camFindButton:
+                startCamera(Helpers.CAMFIND_REQUEST);
+                break;
+            case R.id.clarifaiButton:
+                startCamera(Helpers.CLARIFAI_REQUEST);
+                break;
+        }
     }
 }

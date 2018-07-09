@@ -55,8 +55,8 @@ public class ClarifaiTask extends AsyncTask<String, Void, String> {
         dialog.setMessage(mainActivity.getResources().getString(R.string.image_picker_task));
         dialog.setIndeterminate(false);
         dialog.setCancelable(true);
-//        if (mainActivity != null)
-//            dialog.show();
+        if (mainActivity != null)
+            dialog.show();
     }
 
     protected void onPostExecute(String result) {

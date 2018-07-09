@@ -12,4 +12,5 @@
     <string name="ContactingServers">Contacting Servers</string>
     <string name="image_picker_task">picking image</string>
     <string name="clarifai">Clarifai</string>
+    <string name="SomethingWrong">Ooops, something wrong!</string>
 </resources>
